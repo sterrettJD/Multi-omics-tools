@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 from scipy.spatial import procrustes
+
 
 #A procrustes randomization test! aka protest
 def protest(a,b,n=999):
@@ -35,6 +38,41 @@ def protest(a,b,n=999):
   pval = (sum([disparity > d for d in disparities])+1)/(n+1)
   
   return disparity, pval, disparities
+
+
+def procrustes_plot(a,b, a_name,b_name):
+    """a: ordination coordinates for dataset a
+     b: ordination coordinates for dataset b
+     a_name: name for dataset a
+     b_name: name for dataset b
+     - - - - - - - - - - - - - - - - - - - - 
+     returns:
+     ax: axes of plot
+     disp: disparity score of procrustes
+    """
+
+    # do procrustes
+    mtx1, mtx2, disparity = procrustes(a, b)
+
+    # Make our plotting df
+    proplot = pd.concat([pd.DataFrame(mtx1), pd.DataFrame(mtx2)])
+    proplot.columns = ["PCo1", "PCo2", "PCo3"]
+    proplot["Dataset"] = [a_name]*a.shape[0] + [b_name]*b.shape[0]
+    
+    # plot
+    ax = sns.scatterplot(x="PCo1",y="PCo2",
+                         style="Dataset",hue="Dataset",
+                         data=proplot,
+                         markers=["v","o"],
+                         s=150)
+    # Add lines
+    for i in range(len(mtx1)):
+        plt.plot([mtx1[i,0],mtx2[i,0]],
+                 [mtx1[i,1],mtx2[i,1]],
+                 c="black", linewidth=0.75)
+
+    return ax, disparity
+
 
 #EXAMPLE
 a = pd.DataFrame(np.array([[1, 3], 
