@@ -73,17 +73,17 @@ def procrustes_plot(a,b, a_name,b_name):
 
     return ax, disparity
 
+# EXAMPLE
+if __name__=="__main__":
+  a = pd.DataFrame(np.array([[1, 3], 
+                            [1, 2], 
+                            [1, 1], 
+                            [2, 1]]))
+  b = pd.DataFrame(np.array([[4, -2], 
+                            [4, -4], 
+                            [4, -6], 
+                            [2, -6]]))
 
-#EXAMPLE
-a = pd.DataFrame(np.array([[1, 3], 
-                           [1, 2], 
-                           [1, 1], 
-                           [2, 1]]))
-b = pd.DataFrame(np.array([[4, -2], 
-                           [4, -4], 
-                           [4, -6], 
-                           [2, -6]]))
+  disp, p, disps = protest(a,b)
 
-disp, p, disps = protest(a,b)
-
-print(f'pval: {p} \ndisparity: {disp}')
+  print(f'pval: {p} \ndisparity: {disp}')
